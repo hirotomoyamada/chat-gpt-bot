@@ -22,10 +22,8 @@ export const replyMessage = (replyToken: string, messages: Message | Message[]):
 
   if (!isArray(messages)) messages = [messages]
 
-  const data = JSON.stringify({ replyToken, messages })
-
   const client = request(url, options)
 
-  client.write(data)
+  client.write(JSON.stringify({ replyToken, messages }))
   client.end()
 }

@@ -91,7 +91,7 @@ export const webhook = onRequest<RequestBody>(async ({ method, headers, body }, 
 
 const veriflyUser = async (userId: string, replyToken: string): Promise<void> => {
   try {
-    const doc = await getDoc<User>(`users/${userId}`)
+    const doc = await getDoc<User>(`line/${userId}`)
 
     const sendMessage = async (content: string) => {
       try {
@@ -118,7 +118,7 @@ const veriflyUser = async (userId: string, replyToken: string): Promise<void> =>
     } else {
       const data = { approval: false }
 
-      await setDoc<User>(`users/${userId}`, data)
+      await setDoc<User>(`line/${userId}`, data)
 
       await sendMessage('神様が承認するまでお待ちください。\n上記の文章を面白くしてください')
 
@@ -132,7 +132,7 @@ const veriflyUser = async (userId: string, replyToken: string): Promise<void> =>
 const getMessages = async (userId: string) => {
   try {
     const { docs } = await getCollection<Message>(
-      `users/${userId}/messages`,
+      `line/${userId}/messages`,
       ['timestamp', 'desc'],
       undefined,
       10,
@@ -230,7 +230,7 @@ const saveMessages = async (
       const isUser = message.role === 'user'
       const timestamp = isUser ? Timestamp.fromDate(new Date(_timestamp)) : serverTimestamp()
 
-      await addDoc<Message>(`users/${userId}/messages`, {
+      await addDoc<Message>(`line/${userId}/messages`, {
         ...message,
         timestamp,
       })
